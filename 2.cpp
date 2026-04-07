@@ -11,34 +11,39 @@ struct ListNode {
 };
 
 ListNode* addTwoNumbers(ListNode* l1, ListNode* l2){
-    int num1 = 0;
-    int num2 = 0;
-
-    int i = 0;
-    ListNode* cur = l1;
-    while (cur != nullptr){
-        num1 += pow(10,i) * cur->val;
-        i++;
-        cur = cur->next;
+   ListNode dummy;
+    ListNode* tail = &dummy;
+    if (l1->val == 0 && l2->val == 0){
+        tail->next = new ListNode(0);
     }
-
-    i = 0;
-    cur = l2;
-    while (cur != nullptr){
-        num2 += pow(10,i) * cur->val;
-        i++;
-        cur = cur->next;
+    int carry = 0;
+    int sum;
+    while (l1 != nullptr && l2 != nullptr){
+        sum = l1->val + l2->val + carry;
+        tail->next = new ListNode(sum % 10);
+        carry = sum / 10;
+        tail = tail->next;
+        l1 = l1->next;
+        l2 = l2->next;
     }
-
-    int total = num1 + num2;
-    i = 1;
-    cur = l1;
-    while (cur != nullptr){
-        cur->val = (total/i) % 10;
-        i *= 10;
-        cur = cur->next;
+    while (l1 != nullptr){
+        sum = l1->val + carry;
+        tail->next = new ListNode(sum % 10);
+        carry = sum / 10;
+        tail = tail->next;
+        l1 = l1->next;
     }
-    return l1;
+    while (l2 != nullptr){
+        sum = l2->val + carry;
+        tail->next = new ListNode(sum % 10);
+        carry = sum / 10;
+        tail = tail->next;
+        l2 = l2->next;
+    }
+    if (carry > 0){
+        tail->next = new ListNode(carry);
+    }
+    return dummy.next; 
 }
 
 int main(){
